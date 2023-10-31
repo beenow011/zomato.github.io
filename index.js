@@ -10,20 +10,24 @@ let isOrderDelivered = false;
 window.addEventListener('load',function(){
     document.getElementById('acceptOrder').addEventListener( 'click',function(){
         askRestaurentToAcceptOrReject();
+        
+
         // console.log(res);
     });
-    document.getElementById('findValet').addEventListener('click',function(){
-        StartSearchingForValets();
-    })
-    document.getElementById('deliverOrder').addEventListener('click',function(){
-        setTimeout(()=>{
-            isOrderDelivered = true ;
-        },2000);
-    })
+   
+    
     checkIfOrderAccepted()
     .then((isOrderAccepted)=>{
         console.log('update from restaurent',isOrderAccepted);
-        if(isOrderAccepted) startPreparingOrder();
+        if(isOrderAccepted) {
+            document.getElementsByTagName('button')[0].classList.remove('none');
+            startPreparingOrder();
+            document.getElementsByTagName('button')[0].addEventListener('click',function(){
+                StartSearchingForValets();
+            })
+        document.querySelector('#acceptOrder').classList.add('none');
+        
+    }
         else alert('Sorry! restaurent could not accept your order.');
     })
     .catch(err=>{
@@ -133,6 +137,13 @@ function checkIfValetAssaigned(){
             console.log('Searching for Valet');
             if(isValetFound){
                 updateValetDetails();
+                document.getElementsByTagName('button')     [0].classList.add('none');
+                document.getElementsByTagName('button')     [2].classList.remove('none');
+                document.getElementsByTagName('button')     [2].addEventListener('click',function(){
+                    setTimeout(()=>{
+                        isOrderDelivered = true ;
+                    },2000);
+                })
                 resolve('Updated valet details');
                 clearTimeout(valetTimer);
             }
